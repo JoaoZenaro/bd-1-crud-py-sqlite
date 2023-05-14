@@ -1,5 +1,6 @@
 """Menu"""
 import sys
+import os
 try:
     import tty
     import termios
@@ -7,6 +8,11 @@ try:
 except ImportError:
     import msvcrt
     WINDOWS = True
+
+
+def clear_term():
+    os.system("clear || cls")
+
 
 def getch():
     """Cross platform getch"""
@@ -20,17 +26,18 @@ def getch():
             termios.tcsetattr(file_descriptor, termios.TCSADRAIN, old_settings)
         return char
     else:
-        char = msvcrt.getch() # ignorar erro (se houver)
+        char = msvcrt.getch()  # ignorar erro (se houver)
         if char in [b'\x00', b'\xe0']:
             char = msvcrt.getch()
         return char.decode()
 
+
 def arrow_key_menu(options):
     """Arrow key menu"""
     selected = 0
-    
+
     while True:
-        print("\033[2J\033[H")
+        clear_term()
         for index, option in enumerate(options):
             if index == selected:
                 print(">> " + option + " <<")
